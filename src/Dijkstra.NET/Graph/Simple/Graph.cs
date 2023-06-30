@@ -45,24 +45,25 @@ namespace Dijkstra.NET.Graph.Simple
         /// <summary>
         /// Ensures that the dictionary can hold up to a specified number of entries without any further expansion of its backing storage.
         /// </summary>
-        /// <param name="nodecount">expected maximum nodecount</param>
-        public void SetExpectedNodeCount(int nodecount)
+        /// <param name="expectedNodes">expected maximum nodecount</param>
+        public void EnsureCapacity(int expectedNodes)
         {
-            if (nodecount <= _nodes.Count)
+            if (expectedNodes <= _nodes.Count)
                 return;
-            _nodes.EnsureCapacity(nodecount);
-            _nodesParent.EnsureCapacity(nodecount);
+            _nodes.EnsureCapacity(expectedNodes);
+            _nodesParent.EnsureCapacity(expectedNodes);
         }
 
         /// <summary>
         /// Add node to graph
         /// </summary>
-        /// <returns></returns>
-        public uint AddNode()
+        /// <param name="edgeCapacity">expected edges for the node (for speed optimization)</param>
+        /// <returns>key</returns>
+        public uint AddNode(int edgeCapacity = 0)
         {
             uint key = (uint) (_nodes.Count + 1);
-            _nodes.Add(key, new HashSet<ReadonlyEdge>());
-            _nodesParent.Add(key, new HashSet<uint>());
+            _nodes.Add(key, new HashSet<ReadonlyEdge>(edgeCapacity));
+            _nodesParent.Add(key, new HashSet<uint>(edgeCapacity));
             return key;
         }
 
