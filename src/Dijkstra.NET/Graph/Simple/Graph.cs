@@ -43,6 +43,18 @@ namespace Dijkstra.NET.Graph.Simple
         }
 
         /// <summary>
+        /// Ensures that the dictionary can hold up to a specified number of entries without any further expansion of its backing storage.
+        /// </summary>
+        /// <param name="nodecount">expected maximum nodecount</param>
+        public void SetExpectedNodeCount(int nodecount)
+        {
+            if (nodecount <= _nodes.Count)
+                return;
+            _nodes.EnsureCapacity(nodecount);
+            _nodesParent.EnsureCapacity(nodecount);
+        }
+
+        /// <summary>
         /// Add node to graph
         /// </summary>
         /// <returns></returns>
@@ -64,13 +76,23 @@ namespace Dijkstra.NET.Graph.Simple
         /// <returns>True if two nodes exist</returns>
         public bool Connect(uint from, uint to, int cost)
         {
+            /*
             if (!_nodes.ContainsKey(from) || !_nodes.ContainsKey(to))
+                return false;*/
+
+            if(_nodesParent.TryGetValue(to, out var parentnode) && _nodes.TryGetValue(from, out var node))
+            {
+                parentnode.Add(from);
+                node.Add(new ReadonlyEdge(to, cost));
+                return true;
+            }
+            else
                 return false;
 
-            _nodesParent[to].Add(from);
-            _nodes[from].Add(new ReadonlyEdge(to, cost));
+            //_nodesParent[to].Add(from);
+            //_nodes[from].Add(new ReadonlyEdge(to, cost));
 
-            return true;
+            //return true;
         }
 
         /// <summary>
