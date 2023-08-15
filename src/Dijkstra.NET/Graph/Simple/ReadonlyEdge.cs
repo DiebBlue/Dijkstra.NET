@@ -21,7 +21,8 @@ namespace Dijkstra.NET.Graph.Simple
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null)
+                return false;
             return obj is ReadonlyEdge other && Equals(other);
         }
 

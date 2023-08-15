@@ -103,28 +103,44 @@ namespace Dijkstra.NET.Tests.ShortestPath
         {
             var graph = new Graph.Simple.Graph();
 
-            graph.AddNode();
-            graph.AddNode();
-            graph.AddNode();
-            graph.AddNode();
-            graph.AddNode();
-            graph.AddNode();
+            // add nodes and nodes to remove
+            var del_node_1 = graph.AddNode();
+            var node_1 = graph.AddNode();
+            var node_2 = graph.AddNode();
+            var del_node_2 = graph.AddNode();
+            var node_3 = graph.AddNode();
+            var node_4 = graph.AddNode();
+            var del_node_3 = graph.AddNode();
+            var del_node_4 = graph.AddNode();
+            var node_5 = graph.AddNode();
+            var node_6 = graph.AddNode();
 
-            graph.Connect(1, 2, 2);
-            graph.Connect(1, 3, 6);
-            graph.Connect(2, 3, 2);
-            graph.Connect(3, 4, 1);
-            graph.Connect(4, 5, 1);
-            graph.Connect(1, 6, 5);
+            // connect nodes
+            graph.Connect(node_1, node_2, 2);
+            graph.Connect(node_1, node_3, 6);
+            graph.Connect(node_1, del_node_1, 1);
+            graph.Connect(del_node_2, del_node_1, 1);
+            graph.Connect(node_2, node_3, 2);
+            graph.Connect(node_3, node_4, 1);
+            graph.Connect(del_node_3, node_4, 1);
+            graph.Connect(node_4, node_5, 1);
+            graph.Connect(del_node_4, del_node_3, 1);
+            graph.Connect(node_1, node_6, 5);
 
-            var result = graph.Dijkstra(1, 5);
+            // remove some nodes
+            graph.RemoveNode(del_node_1);
+            graph.RemoveNode(del_node_3);
+            graph.RemoveNode(del_node_4);
+            graph.RemoveNode(del_node_2);
+
+            var result = graph.Dijkstra(node_1, node_5);
             uint[] path = result.GetPath().ToArray();
 
-            Assert.Equal<uint>(1, path[0]);
-            Assert.Equal<uint>(2, path[1]);
-            Assert.Equal<uint>(3, path[2]);
-            Assert.Equal<uint>(4, path[3]);
-            Assert.Equal<uint>(5, path[4]);
+            Assert.Equal<uint>(node_1, path[0]);
+            Assert.Equal<uint>(node_2, path[1]);
+            Assert.Equal<uint>(node_3, path[2]);
+            Assert.Equal<uint>(node_4, path[3]);
+            Assert.Equal<uint>(node_5, path[4]);
 
             Assert.Equal(6, result.Distance);
             Assert.True(result.IsFounded);

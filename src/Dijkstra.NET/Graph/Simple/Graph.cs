@@ -27,6 +27,20 @@ namespace Dijkstra.NET.Graph.Simple
             return new EdgeTemp(graph, (uint)node);
         }
 
+        public Graph(int nodeCapacity = 0)
+        {
+            if (nodeCapacity > 0)
+            {
+                _nodes = new Dictionary<uint, HashSet<ReadonlyEdge>>(nodeCapacity);
+                _nodesParent = new Dictionary<uint, HashSet<uint>>(nodeCapacity);
+            }
+            else
+            {
+                _nodes = new Dictionary<uint, HashSet<ReadonlyEdge>>(nodeCapacity);
+                _nodesParent = new Dictionary<uint, HashSet<uint>>(nodeCapacity);
+            }
+        }
+
         /// <summary>
         /// Add nodes to graph
         /// </summary>
@@ -50,8 +64,10 @@ namespace Dijkstra.NET.Graph.Simple
         {
             if (expectedNodes <= _nodes.Count)
                 return;
+#if NET6_0 || NET7_0
             _nodes.EnsureCapacity(expectedNodes);
             _nodesParent.EnsureCapacity(expectedNodes);
+#endif
         }
 
         /// <summary>
@@ -62,9 +78,53 @@ namespace Dijkstra.NET.Graph.Simple
         public uint AddNode(int edgeCapacity = 0)
         {
             uint key = (uint) (_nodes.Count + 1);
+#if NET6_0 || NET7_0
             _nodes.Add(key, new HashSet<ReadonlyEdge>(edgeCapacity));
             _nodesParent.Add(key, new HashSet<uint>(edgeCapacity));
+#else
+            _nodes.Add(key, new HashSet<ReadonlyEdge>());
+            _nodesParent.Add(key, new HashSet<uint>());
+#endif
             return key;
+        }
+
+        /// <summary>
+        ///  Remove node from graph and all edges connected to it
+        /// </summary>
+        /// <param name="key">the key</param>
+        public void RemoveNode(uint key)
+        {
+            // remove this node from all parent node connections
+            
+            // find the node with the key
+            if (_nodes.TryGetValue(key, out var node))
+            {
+                // iterate over all edges from node and remove the node from the parent list
+                foreach (var edge in node)
+                {
+                    if(_nodesParent.TryGetValue(edge.Key, out var parentnode))
+                        parentnode.Remove(key);
+                }
+                // remove the node from the node list
+                _nodes.Remove(key);
+            }
+
+            // remove the node as a parent node from all nodes
+
+            // find the node with the key in the parent list
+            if (_nodesParent.TryGetValue(key, out var parent))
+            {
+                // iterate over all parent nodes and remove the node from the edge list
+                foreach (var parentKey in parent)
+                {
+                    if (_nodes.TryGetValue(parentKey, out var edges))
+                    {
+                        edges.RemoveWhere(e => e.Key == key);
+                    }
+                }
+                // remove the node from the parent list
+                _nodesParent.Remove(key);
+            }
         }
 
         /// <summary>
