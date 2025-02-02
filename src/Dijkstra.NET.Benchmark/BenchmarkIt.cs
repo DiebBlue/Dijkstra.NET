@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Jobs;
 using BenchmarkDotNet.Engines;
 using Dijkstra.NET.PageRank;
 using Dijkstra.NET.ShortestPath;
 
 namespace Dijkstra.NET.Benchmark
 {
-    [SimpleJob(RunStrategy.Monitoring, launchCount: 1, warmupCount: 2, targetCount: 3)]
+    [SimpleJob(RunStrategy.Monitoring, launchCount: 1, warmupCount: 2)]
     [MemoryDiagnoser]
     public class BenchmarkIt : BenchmarkBase
     {

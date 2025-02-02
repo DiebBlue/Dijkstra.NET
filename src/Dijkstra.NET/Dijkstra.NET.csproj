@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net7.0</TargetFrameworks>
-    <Version>1.2.3</Version>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>warnings</Nullable>
+    <Version>1.2.4</Version>
     <Authors>Mateusz Mazurek, Daniel Kapusi</Authors>
     <Company />
     <Description>Graph processing library.</Description>
@@ -10,6 +12,18 @@
     <RepositoryUrl>https://github.com/DiebBlue/Dijkstra.NET</RepositoryUrl>
     <PackageTags>graphs graph-theory dijkstra page-rank</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <LangVersion>7.3</LangVersion>
+    <Nullable>disable</Nullable>
+    <GenerateGlobalUsings>false</GenerateGlobalUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+  <!-- Für net8.0 z. B. die neueste Sprachversion verwenden -->
+  <PropertyGroup Condition="'$(TargetFramework)'!='netstandard2.0'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
 </Project>

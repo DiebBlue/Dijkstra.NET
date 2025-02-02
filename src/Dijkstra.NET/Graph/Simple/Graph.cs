@@ -11,7 +11,7 @@ namespace Dijkstra.NET.Graph.Simple
     /// <summary>
     /// Simple graph for nodes processing
     /// </summary>
-    public class Graph: IDijkstraGraph, IPageRankGraph
+    public class Graph : IDijkstraGraph, IPageRankGraph
     {
         private readonly Dictionary<uint, HashSet<ReadonlyEdge>> _nodes = new Dictionary<uint, HashSet<ReadonlyEdge>>();
         private readonly Dictionary<uint, HashSet<uint>> _nodesParent = new Dictionary<uint, HashSet<uint>>();
@@ -64,7 +64,8 @@ namespace Dijkstra.NET.Graph.Simple
         {
             if (expectedNodes <= _nodes.Count)
                 return;
-#if NET6_0 || NET7_0
+            // check if it is Net6_0 or higher
+#if NET6_0_OR_GREATER
             _nodes.EnsureCapacity(expectedNodes);
             _nodesParent.EnsureCapacity(expectedNodes);
 #endif
@@ -77,8 +78,8 @@ namespace Dijkstra.NET.Graph.Simple
         /// <returns>key</returns>
         public uint AddNode(int edgeCapacity = 0)
         {
-            uint key = (uint) (_nodes.Count + 1);
-#if NET6_0 || NET7_0
+            uint key = (uint)(_nodes.Count + 1);
+#if NET6_0_OR_GREATER
             _nodes.Add(key, new HashSet<ReadonlyEdge>(edgeCapacity));
             _nodesParent.Add(key, new HashSet<uint>(edgeCapacity));
 #else
@@ -95,14 +96,14 @@ namespace Dijkstra.NET.Graph.Simple
         public void RemoveNode(uint key)
         {
             // remove this node from all parent node connections
-            
+
             // find the node with the key
             if (_nodes.TryGetValue(key, out var node))
             {
                 // iterate over all edges from node and remove the node from the parent list
                 foreach (var edge in node)
                 {
-                    if(_nodesParent.TryGetValue(edge.Key, out var parentnode))
+                    if (_nodesParent.TryGetValue(edge.Key, out var parentnode))
                         parentnode.Remove(key);
                 }
                 // remove the node from the node list
@@ -141,7 +142,7 @@ namespace Dijkstra.NET.Graph.Simple
             if (!_nodes.ContainsKey(from) || !_nodes.ContainsKey(to))
                 return false;*/
 
-            if(_nodesParent.TryGetValue(to, out var parentnode) && _nodes.TryGetValue(from, out var node))
+            if (_nodesParent.TryGetValue(to, out var parentnode) && _nodes.TryGetValue(from, out var node))
             {
                 parentnode.Add(from);
                 node.Add(new ReadonlyEdge(to, cost));

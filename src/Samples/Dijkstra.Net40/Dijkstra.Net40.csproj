@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Dijkstra.Net40</RootNamespace>
     <AssemblyName>Dijkstra.Net40</AssemblyName>
-    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Dijkstra.NET\Dijkstra.NET.csproj">
-      <Project>{2d42c275-6a10-4ac9-bbcf-1483feb68b04}</Project>
+      <Project>{c08b0894-3c33-4828-b7ef-d2b9c9414f3c}</Project>
       <Name>Dijkstra.NET</Name>
     </ProjectReference>
   </ItemGroup>
