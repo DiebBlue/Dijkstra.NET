@@ -16,7 +16,7 @@ namespace Dijkstra.NET.ShortestPath
 
             int Distance(uint key)
             {
-                return distance.ContainsKey(key) ? distance[key] : Int32.MaxValue;
+                return distance.TryGetValue(key, out var value) ? value : Int32.MaxValue;
             }
 
             do
